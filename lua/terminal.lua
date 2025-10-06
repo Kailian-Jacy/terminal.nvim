@@ -201,7 +201,7 @@ function M.toggle(index, layout, force)
     if term then
         term:toggle(layout, force)
     else
-        M.run(nil, { layout = layout })
+        terminal:new({ layout = layout }):open()
     end
 end
 

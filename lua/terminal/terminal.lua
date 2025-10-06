@@ -8,6 +8,7 @@ local active_terminals = require("terminal.active_terminals")
 ---@field layout table
 ---@field bufnr number
 ---@field job_id number
+---@field detach integer
 ---@field autoclose boolean
 ---@field startinsert boolean
 ---@field cmd string|table
@@ -22,6 +23,7 @@ local Terminal = {
     cmd = { vim.o.shell, "-l" },
     autoclose = false,
     startinsert = false,
+    detach = 1,
 }
 
 ---Instantiate a new terminal
@@ -39,7 +41,7 @@ end
 function Terminal:_spawn()
     local cmd = self.cmd
     local opts = {
-        detach = 1,
+        detach = self.detach,
         cwd = type(self.cwd) == "function" and self:cwd() or self.cwd,
         clear_env = self.clear_env,
         env = self.env,
@@ -58,6 +60,8 @@ function Terminal:_spawn()
     --         return true
     --     end,
     -- })
+    -- local cmd_str = type(cmd) == "table" and table.concat(cmd, " ") or cmd
+    -- vim.print("cmd: " .. cmd_str .. " detach: " .. opts.detach)
     local jobid = vim.fn.termopen(cmd, opts)
 
     -- on_term_open runs now
